@@ -1,6 +1,5 @@
 package org.sigei.model.pessoa;
 
-import java.time.LocalDate;
 import org.sigei.model.evento.Evento;
 import java.util.ArrayList;
 
@@ -11,8 +10,8 @@ public class Organizador<C> extends Pessoa<C> {
         super();
         eventos = new ArrayList<>();
     };
-    public Organizador(C chave, String nome, String sobrenome, LocalDate dataNasc) {
-        super(chave, nome, sobrenome, dataNasc);
+    public Organizador(C chave, String nome, String sobrenome) {
+        super(chave, nome, sobrenome);
         eventos = new ArrayList<>();
     }
 

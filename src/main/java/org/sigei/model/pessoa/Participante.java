@@ -9,18 +9,24 @@ import java.util.ArrayList;
 
 public class Participante<CPF> extends Pessoa<CPF> {
     private final ArrayList<Ingresso> ingressos;
+    private LocalDate dataNasc;
 
     public Participante() {
         super();
         ingressos = new ArrayList<>();
     };
     public Participante(CPF cpf, String nome, String sobrenome, LocalDate dataNasc) {
-        super(cpf, nome, sobrenome, dataNasc);
+        super(cpf, nome, sobrenome);
+        this.dataNasc = dataNasc;
         ingressos = new ArrayList<>();
     }
 
     public ArrayList<Ingresso> getIngressos() {
         return ingressos;
+    }
+
+    public LocalDate getDataNasc() {
+        return dataNasc;
     }
 
     public void comprarIngresso(Evento evento, Ingresso ingresso)
