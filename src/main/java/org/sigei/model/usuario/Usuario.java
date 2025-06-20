@@ -1,5 +1,6 @@
 package org.sigei.model.usuario;
 
+import org.sigei.exception.TipoUsuarioNaoEncontradoException;
 import org.sigei.model.pessoa.Administrador;
 import org.sigei.model.pessoa.Organizador;
 import org.sigei.model.pessoa.Participante;
@@ -41,8 +42,7 @@ public class Usuario<C> {
                 return ETipoUsuario.ORGANIZADOR;
             }
             default -> {
-                //TODO
-                throw new RuntimeException("Tipo não encontrado");
+                throw new TipoUsuarioNaoEncontradoException();
             }
         }
     }
