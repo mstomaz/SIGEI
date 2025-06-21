@@ -4,24 +4,15 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
-
-import org.sigei.dao.evento.EventoDAO;
-import org.sigei.dto.EventoDTO;
+import org.sigei.dao.evento.FestaDAO;
+import org.sigei.dto.FeiraDTO;
+import org.sigei.dto.FestaDTO;
 import org.sigei.exception.EventoNaoEncontradoException;
 import org.sigei.exception.ValidationException;
-import org.sigei.model.builder.EnderecoBuilder;
-import org.sigei.model.builder.evento.FeiraBuilder;
-import org.sigei.model.builder.evento.LocalEventoBuilder;
-import org.sigei.model.builder.pessoa.ParticipanteBuilder;
-import org.sigei.model.builder.usuario.UsuarioBuilder;
+import org.sigei.model.Endereco;
+import org.sigei.model.builder.evento.FestaBuilder;
 import org.sigei.model.evento.LocalEvento;
-import org.sigei.model.pessoa.Pessoa;
-import org.sigei.model.builder.usuario.CredenciasBuilder;
-import org.sigei.model.usuario.Usuario;
-import org.sigei.model.*;
 import org.sigei.validacao.MessageProvider;
-
-import java.time.LocalDate;
 
 public class prin {
     static Map<String, String> campos = Map.of(
@@ -36,18 +27,20 @@ public class prin {
     );
     public static void main(String[] args) {
         try {
-            EventoDAO dao = new EventoDAO();
-//            dao.inserir(new FeiraBuilder().criar("lol", "asdkadiajs",
-//                    new LocalEvento(new Endereco("sdasd", "lalsds", "aeeasd", "asdasd", "as"), 200),
-//                    LocalDateTime.of(2026, 11, 17, 0, 0, 0), 200
+            FestaDAO dao = new FestaDAO();
+//            dao.inserir(new FestaBuilder().criar("festa country", "muito sertanjeo e bebida (festa sem alcool)",
+//                    new LocalEvento(new Endereco("sdasd", "lalsds", "aeeasd", "asdasd", "as"),50000),
+//                    LocalDateTime.of(2026, 5, 2, 22, 0, 0),
+//                     50000, "SLAYER", "TWICE", "Larissa Manoela", "John Lennon"
 //                    ));
 //            System.out.println("Evento criado. Cheque o banco");
 //            EventoDTO dto = dao.buscarPelaChave(1);
 //            if (dto == null) {
 //                throw new EventoNaoEncontradoException();
 //            }
-            ArrayList<EventoDTO> dtos = dao.buscarTodos();
-            for (EventoDTO dto : dtos) {
+            dao.apagar(3);
+            ArrayList<FestaDTO> dtos = dao.buscarTodos();
+            for (FestaDTO dto : dtos) {
                 System.out.println(dto.getTipoEvento());
                 System.out.println(dto.getNome());
             }

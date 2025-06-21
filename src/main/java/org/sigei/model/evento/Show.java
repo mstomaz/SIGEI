@@ -22,7 +22,7 @@ public class Show extends Evento {
 
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data, String... lineUp) {
         this(nome, descricao, local, data);
-        this.lineUp = (ArrayList<String>) Arrays.asList(lineUp);
+        this.lineUp = new ArrayList<>(Arrays.asList(lineUp));
     }
 
     public ArrayList<String> getLineUp() {
@@ -38,7 +38,7 @@ public class Show extends Evento {
     }
 
     public void addArtistas(String... artistas) {
-        addArtistas((ArrayList<String>)Arrays.asList(artistas));
+        addArtistas(new ArrayList<>(Arrays.asList(artistas)));
     }
 
     public void rmvArtista(String nomeArtistas) {

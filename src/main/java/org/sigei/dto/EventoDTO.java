@@ -16,8 +16,23 @@ public class EventoDTO {
     private int lotacao;
     private LocalDateTime data;
     private int vagasDisp;
-    private ETipoEvento tipoEvento;
+    protected ETipoEvento tipoEvento;
 
+    protected EventoDTO(int id, String nome, String descricao, String rua, String numero, String bairro, String cidade,
+                        String uf, String referencia, int lotacao, LocalDateTime data, int vagasDisp) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.rua = rua;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.referencia = referencia;
+        this.lotacao = lotacao;
+        this.data = data;
+        this.vagasDisp = vagasDisp;
+    }
     public EventoDTO(int id, String nome, String descricao, String rua, String numero, String bairro, String cidade,
                      String uf, String referencia, int lotacao, LocalDateTime data, int vagasDisp, int tipoEvento) {
         this.id = id;
@@ -33,14 +48,6 @@ public class EventoDTO {
         this.data = data;
         this.vagasDisp = vagasDisp;
         this.tipoEvento = defineTipoEvento(tipoEvento);
-    }
-
-    private ETipoEvento defineTipoEvento(int idTipo) {
-        for (ETipoEvento tipo : ETipoEvento.values()) {
-            if (tipo.getIdTipo() == idTipo)
-                return tipo;
-        }
-        return null;
     }
 
     public int getId() {
@@ -93,5 +100,13 @@ public class EventoDTO {
 
     public ETipoEvento getTipoEvento() {
         return tipoEvento;
+    }
+
+    private ETipoEvento defineTipoEvento(int idTipo) {
+        for (ETipoEvento tipo : ETipoEvento.values()) {
+            if (tipo.getIdTipo() == idTipo)
+                return tipo;
+        }
+        return null;
     }
 }

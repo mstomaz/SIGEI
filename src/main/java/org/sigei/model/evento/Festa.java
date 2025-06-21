@@ -12,7 +12,7 @@ public class Festa extends Evento {
     public Festa(String nome, String descricao, LocalEvento local, LocalDateTime data) {
         super(nome, descricao, local, data);
         tipoEvento = ETipoEvento.FESTA;
-        atracoes = new ArrayList<String>();
+        atracoes = new ArrayList<>();
     }
 
     public Festa(String nome, String descricao, LocalEvento local, LocalDateTime data, ArrayList<String> atracoes) {
@@ -22,7 +22,11 @@ public class Festa extends Evento {
 
     public Festa(String nome, String descricao, LocalEvento local, LocalDateTime data, String... atracoes) {
         this(nome, descricao, local, data);
-        this.atracoes = (ArrayList<String>)Arrays.asList(atracoes);
+        this.atracoes = new ArrayList<>(Arrays.asList(atracoes));
+    }
+
+    public ArrayList<String> getAtracoes() {
+        return atracoes;
     }
 
     public void addAtracao(String nomeAtracao) {
@@ -34,7 +38,7 @@ public class Festa extends Evento {
     }
 
     public void addAtracoes(String... atracoes) {
-        addAtracoes((ArrayList<String>)Arrays.asList(atracoes));
+        addAtracoes(new ArrayList<>(Arrays.asList(atracoes)));
     }
 
     public void rmvAtracao(String nomeAtracao) {

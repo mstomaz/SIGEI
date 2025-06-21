@@ -39,3 +39,14 @@ CREATE TABLE IF NOT EXISTS Evento_Ingressos (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS Festa_atracoes (
+    idAtracao int auto_increment,
+	idFesta int,
+    atracao varchar(100),
+    ativo bit DEFAULT 1,
+    CONSTRAINT PK_atracoes_da_festa primary key (idAtracao),
+    CONSTRAINT FK_idEvento_festa FOREIGN KEY (idFesta) REFERENCES Evento(idEvento)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
