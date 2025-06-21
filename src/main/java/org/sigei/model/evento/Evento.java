@@ -4,6 +4,7 @@ import org.sigei.exception.IngressosEsgotadosException;
 import org.sigei.exception.ValidationException;
 import org.sigei.model.Ingresso;
 import org.sigei.model.builder.evento.LocalEventoBuilder;
+import org.sigei.model.evento.enums.ETipoEvento;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public abstract class Evento {
     private LocalDateTime data;
     private Ingresso[] ingressos;
     private int vagasDisp;
+    protected ETipoEvento tipoEvento;
 
     public Evento(String nome, String descricao, LocalEvento local, LocalDateTime data) {
         this.nome = nome;
@@ -79,6 +81,10 @@ public abstract class Evento {
     }
 
     public int getVagasDisponiveis() { return vagasDisp; }
+
+    public ETipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
 
     public void diminuiVagasDisp() throws IngressosEsgotadosException {
         if (vagasDisp == 0) {

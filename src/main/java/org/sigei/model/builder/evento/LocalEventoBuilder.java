@@ -14,6 +14,7 @@ public class LocalEventoBuilder {
                 endereco.getRua(),
                 endereco.getNumero(),
                 endereco.getBairro(),
+                endereco.getCidade(),
                 endereco.getUf());
 
         if (!endeResult.ehValido()) {

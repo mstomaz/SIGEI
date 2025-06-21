@@ -1,25 +1,32 @@
 package org.sigei.model.evento;
 
+import org.sigei.model.evento.enums.ETipoEvento;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Show extends Evento {
-    private final ArrayList<String> lineUp;
+    private ArrayList<String> lineUp;
 
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data) {
         super(nome, descricao, local, data);
+        tipoEvento = ETipoEvento.SHOW;
         lineUp = new ArrayList<String>();
     }
 
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data, ArrayList<String> lineUp) {
-        super(nome, descricao, local, data);
+        this(nome, descricao, local, data);
         this.lineUp = lineUp;
     }
 
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data, String... lineUp) {
-        super(nome, descricao, local, data);
+        this(nome, descricao, local, data);
         this.lineUp = (ArrayList<String>) Arrays.asList(lineUp);
+    }
+
+    public ArrayList<String> getLineUp() {
+        return lineUp;
     }
 
     public void addArtista(String nomeArtista) {

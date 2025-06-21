@@ -1,0 +1,97 @@
+package org.sigei.dto;
+
+import org.sigei.model.evento.enums.ETipoEvento;
+import java.time.LocalDateTime;
+
+public class EventoDTO {
+    private int id;
+    private String nome;
+    private String descricao;
+    private String rua;
+    private String numero;
+    private String bairro;
+    private String cidade;
+    private String uf;
+    private String referencia;
+    private int lotacao;
+    private LocalDateTime data;
+    private int vagasDisp;
+    private ETipoEvento tipoEvento;
+
+    public EventoDTO(int id, String nome, String descricao, String rua, String numero, String bairro, String cidade,
+                     String uf, String referencia, int lotacao, LocalDateTime data, int vagasDisp, int tipoEvento) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.rua = rua;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.referencia = referencia;
+        this.lotacao = lotacao;
+        this.data = data;
+        this.vagasDisp = vagasDisp;
+        this.tipoEvento = defineTipoEvento(tipoEvento);
+    }
+
+    private ETipoEvento defineTipoEvento(int idTipo) {
+        for (ETipoEvento tipo : ETipoEvento.values()) {
+            if (tipo.getIdTipo() == idTipo)
+                return tipo;
+        }
+        return null;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public String getRua() {
+        return rua;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public int getLotacao() {
+        return lotacao;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public int getVagasDisp() {
+        return vagasDisp;
+    }
+
+    public ETipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+}

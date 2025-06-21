@@ -24,7 +24,7 @@ public abstract class EventoValidator {
         }
 
         if (qtdIngressos > local.getLotacao()) {
-            result.addErro("QtdIngressos", "A quantidade de ingressos ultrapassa a lotação atual.");
+            result.addErro("QtdIngressos", "qtdIngressos.ultrapassa");
         }
 
         return result;
