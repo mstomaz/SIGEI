@@ -42,11 +42,40 @@ CREATE TABLE IF NOT EXISTS Evento_Ingressos (
 
 CREATE TABLE IF NOT EXISTS Festa_atracoes (
     idAtracao int auto_increment,
-	idFesta int,
+	idEvento int,
     atracao varchar(100),
     ativo bit DEFAULT 1,
     CONSTRAINT PK_atracoes_da_festa primary key (idAtracao),
-    CONSTRAINT FK_idEvento_festa FOREIGN KEY (idFesta) REFERENCES Evento(idEvento)
+    CONSTRAINT FK_idEvento_festa FOREIGN KEY (idEvento) REFERENCES Evento(idEvento)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Oficina (
+	idEvento int,
+    tema varchar(200),
+    CONSTRAINT PK_oficina primary key (idEvento),
+    CONSTRAINT FK_idEvento_oficina FOREIGN KEY (idEvento) REFERENCES Evento(idEvento)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Palestra (
+	idEvento int,
+    palestrante varchar(200),
+    CONSTRAINT PK_palestra primary key (idEvento),
+    CONSTRAINT FK_idEvento_palestra FOREIGN KEY (idEvento) REFERENCES Evento(idEvento)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Show_artistas (
+	idArtista int auto_increment,
+	idEvento int,
+    artista varchar(100),
+    ativo bit DEFAULT 1,
+    CONSTRAINT PK_artista_show primary key (idArtista),
+    CONSTRAINT FK_idEvento_show FOREIGN KEY (idEvento) REFERENCES Evento(idEvento)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

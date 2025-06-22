@@ -12,7 +12,7 @@ public class Show extends Evento {
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data) {
         super(nome, descricao, local, data);
         tipoEvento = ETipoEvento.SHOW;
-        lineUp = new ArrayList<String>();
+        lineUp = new ArrayList<>();
     }
 
     public Show(String nome, String descricao, LocalEvento local, LocalDateTime data, ArrayList<String> lineUp) {

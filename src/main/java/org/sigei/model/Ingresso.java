@@ -6,7 +6,6 @@ public class Ingresso {
     private int id;
     private Evento evento;
 
-    public Ingresso() {}
     public Ingresso(Evento evento) {
         this.evento = evento;
     }

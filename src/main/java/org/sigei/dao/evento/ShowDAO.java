@@ -1,16 +1,16 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
-import org.sigei.dto.FestaDTO;
-import org.sigei.model.evento.Festa;
+import org.sigei.dto.ShowDTO;
+import org.sigei.model.evento.Show;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
+public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
     @Override
-    public void inserir(Festa festa)
+    public void inserir(Show show)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -22,29 +22,29 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
                     "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
                     "data, vagasDisp, tipoEvento)\n" +
                     "VALUES\n" +
-                    "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2);";
+                    "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 5);";
 
             PreparedStatement pst = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, festa.getNome());
-            pst.setString(2, festa.getDescricao());
-            pst.setString(3, festa.getLocal().getEndereco().getRua());
-            pst.setString(4, festa.getLocal().getEndereco().getNumero());
-            pst.setString(5, festa.getLocal().getEndereco().getBairro());
-            pst.setString(6, festa.getLocal().getEndereco().getCidade());
-            pst.setString(7, festa.getLocal().getEndereco().getUf());
-            pst.setString(8, festa.getLocal().getEndereco().getReferencia());
-            pst.setInt(9, festa.getLocal().getLotacao());
-            pst.setObject(10, festa.getData());
-            pst.setInt(11, festa.getVagasDisponiveis());
+            pst.setString(1, show.getNome());
+            pst.setString(2, show.getDescricao());
+            pst.setString(3, show.getLocal().getEndereco().getRua());
+            pst.setString(4, show.getLocal().getEndereco().getNumero());
+            pst.setString(5, show.getLocal().getEndereco().getBairro());
+            pst.setString(6, show.getLocal().getEndereco().getCidade());
+            pst.setString(7, show.getLocal().getEndereco().getUf());
+            pst.setString(8, show.getLocal().getEndereco().getReferencia());
+            pst.setInt(9, show.getLocal().getLotacao());
+            pst.setObject(10, show.getData());
+            pst.setInt(11, show.getVagasDisponiveis());
 
             pst.execute();
 
             ResultSet rs = pst.getGeneratedKeys();
             if (rs.next()) {
-                festa.setId(rs.getInt(1));
+                show.setId(rs.getInt(1));
             }
 
-            addAtracoes(festa, c);
+            addLineUp(show, c);
             c.commit();
         } catch (SQLException e) {
             c.rollback();
@@ -52,38 +52,38 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
         }
     }
 
-    private void addAtracoes(Festa festa, Connection c)
+    private void addLineUp(Show show, Connection c)
             throws SQLException {
-        String sql = "INSERT INTO Festa_atracoes\n" +
-                "(idEvento, atracao)\n" +
+        String sql = "INSERT INTO Show_artistas\n" +
+                "(idEvento, artista)\n" +
                 "VALUES\n" +
                 "(?, ?);";
 
-        for (String atracao : festa.getAtracoes()) {
+        for (String artista : show.getLineUp()) {
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setInt(1, festa.getId());
-            pst.setString(2, atracao);
+            pst.setInt(1, show.getId());
+            pst.setString(2, artista);
             pst.execute();
         }
     }
 
     @Override
-    public ArrayList<FestaDTO> buscarTodos()
+    public ArrayList<ShowDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
         String sql = "SELECT * FROM Evento\n" +
-                "WHERE tipoEvento = 2";
+                "WHERE tipoEvento = 5";
 
         PreparedStatement pst = c.prepareStatement(sql);
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<FestaDTO> eventos = new ArrayList<>();
+        ArrayList<ShowDTO> eventos = new ArrayList<>();
         while (rs.next()) {
             int idEvento = rs.getInt("idEvento");
-            ArrayList<String> atracoes = buscaAtracoes(idEvento, c);
-            FestaDTO evento = new FestaDTO(
+            ArrayList<String> lineUp = buscaLineUp(idEvento, c);
+            ShowDTO evento = new ShowDTO(
                     idEvento,
                     rs.getString("nome"),
                     rs.getString("descricao"),
@@ -97,7 +97,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
                     LocalDateTime.parse(rs.getString("data").substring(0, 19),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     rs.getInt("vagasDisp"),
-                    atracoes
+                    lineUp
             );
             eventos.add(evento);
         }
@@ -105,7 +105,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
     }
 
     @Override
-    public FestaDTO buscarPelaChave(Integer id)
+    public ShowDTO buscarPelaChave(Integer id)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -122,8 +122,8 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
         }
 
         int idEvento = rs.getInt("idEvento");
-        ArrayList<String> atracoes = buscaAtracoes(idEvento, c);
-        return new FestaDTO(
+        ArrayList<String> lineUp = buscaLineUp(idEvento, c);
+        return new ShowDTO(
                 idEvento,
                 rs.getString("nome"),
                 rs.getString("descricao"),
@@ -137,14 +137,14 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
                 LocalDateTime.parse(rs.getString("data").substring(0, 19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp"),
-                atracoes
+                lineUp
         );
     }
 
-    private ArrayList<String> buscaAtracoes(int idEvento, Connection c)
+    private ArrayList<String> buscaLineUp(int idEvento, Connection c)
             throws SQLException {
-        ArrayList<String> atracoes = new ArrayList<>();
-        String sql = "SELECT * FROM Festa_atracoes\n" +
+        ArrayList<String> lineUp = new ArrayList<>();
+        String sql = "SELECT * FROM Show_artistas\n" +
                 "WHERE idEvento = ?\n" +
                 "AND ativo = 1";
 
@@ -154,9 +154,9 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
         ResultSet rs = pst.executeQuery();
 
         while (rs.next()) {
-            atracoes.add(rs.getString("atracao"));
+            lineUp.add(rs.getString("artista"));
         }
 
-        return atracoes;
+        return lineUp;
     }
 }

@@ -1,7 +1,5 @@
 package org.sigei.dao.evento;
 
-import org.sigei.dao.IEscritaDAO;
-import org.sigei.dao.ILeituraDAO;
 import org.sigei.dao.conexao.ConnectionFactory;
 import org.sigei.model.evento.Feira;
 import java.sql.Connection;
@@ -13,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import org.sigei.dto.FeiraDTO;
 
-public class FeiraDAO implements IEscritaDAO<Feira, Integer>, ILeituraDAO<FeiraDTO, Integer> {
+public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
     @Override
     public void inserir(Feira feira)
             throws SQLException, ClassNotFoundException {
@@ -24,7 +22,7 @@ public class FeiraDAO implements IEscritaDAO<Feira, Integer>, ILeituraDAO<FeiraD
                 "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
                 "data, vagasDisp, tipoEvento)\n" +
                 "VALUES\n" +
-                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1);";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, feira.getNome());
@@ -38,56 +36,6 @@ public class FeiraDAO implements IEscritaDAO<Feira, Integer>, ILeituraDAO<FeiraD
         pst.setInt(9, feira.getLocal().getLotacao());
         pst.setObject(10, feira.getData());
         pst.setInt(11, feira.getVagasDisponiveis());
-        pst.setInt(12, feira.getTipoEvento().getIdTipo());
-
-        pst.execute();
-    }
-
-    @Override
-    public void apagar(Integer id)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "DELETE FROM evento\n" +
-                "WHERE idEvento = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setInt(1, id);
-
-        pst.execute();
-    }
-
-    @Override
-    public void alterar(Feira feira)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "UPDATE evento\n" +
-                "SET\n" +
-                "nome = ?,\n" +
-                "descricao = ?,\n" +
-                "rua = ?,\n" +
-                "numero = ?,\n" +
-                "bairro = ?,\n" +
-                "cidade = ?,\n" +
-                "uf = ?,\n" +
-                "referencia = ?,\n" +
-                "data = ?,\n" +
-                "vagasDisp = ?\n" +
-                "WHERE `idEvento` = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, feira.getNome());
-        pst.setString(2, feira.getDescricao());
-        pst.setString(3, feira.getLocal().getEndereco().getRua());
-        pst.setString(4, feira.getLocal().getEndereco().getNumero());
-        pst.setString(5, feira.getLocal().getEndereco().getBairro());
-        pst.setString(6, feira.getLocal().getEndereco().getCidade());
-        pst.setString(7, feira.getLocal().getEndereco().getUf());
-        pst.setString(8, feira.getLocal().getEndereco().getReferencia());
-        pst.setObject(10, feira.getData());
-        pst.setInt(11, feira.getVagasDisponiveis());
-        pst.setInt(12, feira.getId());
 
         pst.execute();
     }
