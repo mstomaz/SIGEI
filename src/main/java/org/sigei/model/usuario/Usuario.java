@@ -7,18 +7,18 @@ import org.sigei.model.pessoa.Participante;
 import org.sigei.model.pessoa.Pessoa;
 import org.sigei.model.usuario.enums.ETipoUsuario;
 
-public class Usuario<C> {
-    private final Pessoa<C> dadosPessoais;
+public class Usuario {
+    private final Pessoa dadosPessoais;
     private final Credenciais credenciais;
     private final ETipoUsuario tipoUsuario;
 
-    public Usuario(Pessoa<C> dadosPessoais, Credenciais credenciais) {
+    public Usuario(Pessoa dadosPessoais, Credenciais credenciais) {
         this.dadosPessoais = dadosPessoais;
         this.credenciais = credenciais;
         tipoUsuario = defineTipoUsuario();
     }
 
-    public Pessoa<C> getDadosPessoais() {
+    public Pessoa getDadosPessoais() {
         return dadosPessoais;
     }
 
@@ -32,13 +32,13 @@ public class Usuario<C> {
 
     private ETipoUsuario defineTipoUsuario() {
         switch (dadosPessoais) {
-            case Administrador<C> adm -> {
+            case Administrador adm -> {
                 return ETipoUsuario.ADMINISTRADOR;
             }
-            case Participante<C> part -> {
+            case Participante part -> {
                 return ETipoUsuario.PARTICIPANTE;
             }
-            case Organizador<C> org -> {
+            case Organizador org -> {
                 return ETipoUsuario.ORGANIZADOR;
             }
             default -> {

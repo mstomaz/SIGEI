@@ -1,7 +1,7 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
-import org.sigei.dto.ShowDTO;
+import org.sigei.dto.evento.ShowDTO;
 import org.sigei.model.evento.Show;
 import java.sql.*;
 import java.time.LocalDateTime;

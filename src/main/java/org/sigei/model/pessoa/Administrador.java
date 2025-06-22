@@ -1,10 +1,12 @@
 package org.sigei.model.pessoa;
 
-public class Administrador<C> extends Pessoa<C> {
+import org.sigei.model.CPF;
+
+public class Administrador extends Pessoa {
     public Administrador() {
         super();
     };
-    public Administrador(C chave, String nome, String sobrenome) {
-        super(chave, nome, sobrenome);
+    public Administrador(CPF cpf, String nome, String sobrenome) {
+        super(cpf, nome, sobrenome);
     }
 }

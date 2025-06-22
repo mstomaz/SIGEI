@@ -2,7 +2,7 @@ package org.sigei.dao.evento;
 
 import org.sigei.dao.ILeituraDAO;
 import org.sigei.dao.conexao.ConnectionFactory;
-import org.sigei.dto.EventoDTO;
+import org.sigei.dto.evento.EventoDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

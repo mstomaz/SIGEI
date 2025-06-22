@@ -1,9 +1,10 @@
 package org.sigei.model.builder.pessoa;
 
+import org.sigei.model.CPF;
 import org.sigei.validacao.ValidationResult;
 
-public abstract class PessoaValidator<C> {
-    protected ValidationResult validar(C chave, String nome, String sobrenome) {
+public abstract class PessoaValidator {
+    protected ValidationResult validar(CPF cpf, String nome, String sobrenome) {
         ValidationResult result = new ValidationResult();
 
         if (nome.isBlank()) {

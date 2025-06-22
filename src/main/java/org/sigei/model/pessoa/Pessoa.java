@@ -1,21 +1,22 @@
 package org.sigei.model.pessoa;
 
 import org.sigei.exception.ValidationException;
+import org.sigei.model.CPF;
 
-public class Pessoa<C> {
-    private C chave;
+public abstract class Pessoa {
+    private CPF cpf;
     private String nome;
     private String sobrenome;
 
     public Pessoa() {}
-    public Pessoa(C chave, String nome, String sobrenome) {
-        this.chave = chave;
+    public Pessoa(CPF cpf, String nome, String sobrenome) {
+        this.cpf = cpf;
         this.nome = nome;
         this.sobrenome = sobrenome;
     }
 
-    public C getChave() {
-        return chave;
+    public CPF getCpf() {
+        return cpf;
     }
 
     public String getNome() {

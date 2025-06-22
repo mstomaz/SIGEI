@@ -2,12 +2,13 @@ package org.sigei.model.pessoa;
 
 import org.sigei.exception.IngressoDuplicadoException;
 import org.sigei.exception.IngressosEsgotadosException;
+import org.sigei.model.CPF;
 import org.sigei.model.Ingresso;
 import org.sigei.model.evento.Evento;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Participante<CPF> extends Pessoa<CPF> {
+public class Participante extends Pessoa {
     private final ArrayList<Ingresso> ingressos;
     private LocalDate dataNasc;
 

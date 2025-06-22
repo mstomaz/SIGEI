@@ -2,7 +2,7 @@ package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
 import org.sigei.model.evento.Palestra;
-import org.sigei.dto.PalestraDTO;
+import org.sigei.dto.evento.PalestraDTO;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

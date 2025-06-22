@@ -6,8 +6,8 @@ import org.sigei.model.usuario.Credenciais;
 import org.sigei.model.usuario.Usuario;
 import org.sigei.validacao.ValidationResult;
 
-public class UsuarioBuilder<C> {
-    public Usuario<C> criar(Pessoa<C> dadosPessoais, Credenciais credenciais)
+public class UsuarioBuilder {
+    public Usuario criar(Pessoa dadosPessoais, Credenciais credenciais)
             throws ValidationException {
 
         ValidationResult result = new ValidationResult();
@@ -16,6 +16,6 @@ public class UsuarioBuilder<C> {
             throw new ValidationException(result.getErros());
         }
 
-        return new Usuario<C>(dadosPessoais, credenciais);
+        return new Usuario(dadosPessoais, credenciais);
     }
 }

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import org.sigei.dto.FeiraDTO;
+import org.sigei.dto.evento.FeiraDTO;
 
 public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
     @Override

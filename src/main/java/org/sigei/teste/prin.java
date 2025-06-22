@@ -1,22 +1,12 @@
 package org.sigei.teste;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
-import org.sigei.dao.evento.FestaDAO;
+
 import org.sigei.dao.evento.PalestraDAO;
-import org.sigei.dto.EventoDTO;
-import org.sigei.dto.FeiraDTO;
-import org.sigei.dto.FestaDTO;
-import org.sigei.dto.PalestraDTO;
+import org.sigei.dto.evento.PalestraDTO;
 import org.sigei.exception.EventoNaoEncontradoException;
-import org.sigei.exception.ValidationException;
-import org.sigei.model.Endereco;
-import org.sigei.model.builder.evento.FestaBuilder;
-import org.sigei.model.builder.evento.PalestraBuilder;
-import org.sigei.model.evento.LocalEvento;
-import org.sigei.validacao.MessageProvider;
 
 public class prin {
     static Map<String, String> campos = Map.of(

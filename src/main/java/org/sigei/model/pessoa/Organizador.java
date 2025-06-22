@@ -1,17 +1,18 @@
 package org.sigei.model.pessoa;
 
+import org.sigei.model.CPF;
 import org.sigei.model.evento.Evento;
 import java.util.ArrayList;
 
-public class Organizador<C> extends Pessoa<C> {
+public class Organizador extends Pessoa {
     private final ArrayList<Evento> eventos;
 
     public Organizador() {
         super();
         eventos = new ArrayList<>();
     };
-    public Organizador(C chave, String nome, String sobrenome) {
-        super(chave, nome, sobrenome);
+    public Organizador(CPF cpf, String nome, String sobrenome) {
+        super(cpf, nome, sobrenome);
         eventos = new ArrayList<>();
     }
 
