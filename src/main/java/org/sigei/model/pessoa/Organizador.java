@@ -7,10 +7,6 @@ import java.util.ArrayList;
 public class Organizador extends Pessoa {
     private final ArrayList<Evento> eventos;
 
-    public Organizador() {
-        super();
-        eventos = new ArrayList<>();
-    };
     public Organizador(CPF cpf, String nome, String sobrenome) {
         super(cpf, nome, sobrenome);
         eventos = new ArrayList<>();

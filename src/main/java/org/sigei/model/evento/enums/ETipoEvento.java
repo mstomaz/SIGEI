@@ -7,7 +7,7 @@ public enum ETipoEvento {
     PALESTRA(4),
     SHOW(5);
 
-    private int idTipo;
+    private final int idTipo;
     ETipoEvento(int idTipo) {
         this.idTipo = idTipo;
     }

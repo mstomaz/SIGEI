@@ -1,6 +1,7 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
+import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.evento.OficinaDTO;
 import org.sigei.model.evento.Oficina;
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
+public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> implements IGenericsEventoDAO {
     @Override
     public void inserir(Oficina oficina)
             throws SQLException, ClassNotFoundException {
@@ -20,7 +21,7 @@ public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
             String sql = "INSERT INTO evento\n" +
                     "(nome, descricao,\n" +
                     "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
-                    "data, vagasDisp, tipoEvento)\n" +
+                    "dataEvento, vagasDisp, tipoEvento)\n" +
                     "VALUES\n" +
                     "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 3);";
 
@@ -67,7 +68,7 @@ public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
     }
 
     @Override
-    public ArrayList<OficinaDTO> buscarTodos()
+    public ArrayList<EventoDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -78,7 +79,7 @@ public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<OficinaDTO> eventos = new ArrayList<>();
+        ArrayList<EventoDTO> eventos = new ArrayList<>();
         while (rs.next()) {
             OficinaDTO evento = new OficinaDTO(
                     rs.getInt("idEvento"),
@@ -91,7 +92,7 @@ public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
                     rs.getString("uf"),
                     rs.getString("referencia"),
                     rs.getInt("lotacao"),
-                    LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                    LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     rs.getInt("vagasDisp"),
                     rs.getString("tema")
@@ -130,7 +131,7 @@ public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> {
                 rs.getString("uf"),
                 rs.getString("referencia"),
                 rs.getInt("lotacao"),
-                LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp"),
                 rs.getString("tema")

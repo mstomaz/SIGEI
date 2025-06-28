@@ -36,8 +36,8 @@ public class EventoDAO implements ILeituraDAO<EventoDTO, Integer> {
                     rs.getString("uf"),
                     rs.getString("referencia"),
                     rs.getInt("lotacao"),
-                    LocalDateTime.parse(rs.getString("data").substring(0,19),
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.parse(rs.getString("dataEvento").substring(0,19),
+                            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
                     rs.getInt("vagasDisp"),
                     rs.getInt("tipoEvento")
             );
@@ -74,7 +74,7 @@ public class EventoDAO implements ILeituraDAO<EventoDTO, Integer> {
                 rs.getString("uf"),
                 rs.getString("referencia"),
                 rs.getInt("lotacao"),
-                LocalDateTime.parse(rs.getString("data").substring(0,19),
+                LocalDateTime.parse(rs.getString("dataEvento").substring(0,19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp"),
                 rs.getInt("tipoEvento")

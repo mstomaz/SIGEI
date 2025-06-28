@@ -4,18 +4,18 @@ import org.sigei.model.evento.enums.ETipoEvento;
 import java.time.LocalDateTime;
 
 public class EventoDTO {
-    private int id;
-    private String nome;
-    private String descricao;
-    private String rua;
-    private String numero;
-    private String bairro;
-    private String cidade;
-    private String uf;
-    private String referencia;
-    private int lotacao;
-    private LocalDateTime data;
-    private int vagasDisp;
+    private final int id;
+    private final String nome;
+    private final String descricao;
+    private final String rua;
+    private final String numero;
+    private final String bairro;
+    private final String cidade;
+    private final String uf;
+    private final String referencia;
+    private final int lotacao;
+    private final LocalDateTime data;
+    private final int vagasDisp;
     protected ETipoEvento tipoEvento;
 
     protected EventoDTO(int id, String nome, String descricao, String rua, String numero, String bairro, String cidade,

@@ -1,6 +1,7 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
+import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.evento.FestaDTO;
 import org.sigei.model.evento.Festa;
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
+public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> implements IGenericsEventoDAO {
     @Override
     public void inserir(Festa festa)
             throws SQLException, ClassNotFoundException {
@@ -20,7 +21,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
             String sql = "INSERT INTO evento\n" +
                     "(nome, descricao,\n" +
                     "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
-                    "data, vagasDisp, tipoEvento)\n" +
+                    "dataEvento, vagasDisp, tipoEvento)\n" +
                     "VALUES\n" +
                     "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 2);";
 
@@ -68,7 +69,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
     }
 
     @Override
-    public ArrayList<FestaDTO> buscarTodos()
+    public ArrayList<EventoDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -79,7 +80,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<FestaDTO> eventos = new ArrayList<>();
+        ArrayList<EventoDTO> eventos = new ArrayList<>();
         while (rs.next()) {
             int idEvento = rs.getInt("idEvento");
             ArrayList<String> atracoes = buscaAtracoes(idEvento, c);
@@ -94,7 +95,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
                     rs.getString("uf"),
                     rs.getString("referencia"),
                     rs.getInt("lotacao"),
-                    LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                    LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     rs.getInt("vagasDisp"),
                     atracoes
@@ -134,7 +135,7 @@ public class FestaDAO extends BaseEventosDAO<Festa, FestaDTO> {
                 rs.getString("uf"),
                 rs.getString("referencia"),
                 rs.getInt("lotacao"),
-                LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp"),
                 atracoes

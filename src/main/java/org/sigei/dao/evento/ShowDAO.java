@@ -1,14 +1,16 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
+import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.evento.ShowDTO;
+import org.sigei.model.evento.Evento;
 import org.sigei.model.evento.Show;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
+public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> implements IGenericsEventoDAO {
     @Override
     public void inserir(Show show)
             throws SQLException, ClassNotFoundException {
@@ -20,7 +22,7 @@ public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
             String sql = "INSERT INTO evento\n" +
                     "(nome, descricao,\n" +
                     "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
-                    "data, vagasDisp, tipoEvento)\n" +
+                    "dataEvento, vagasDisp, tipoEvento)\n" +
                     "VALUES\n" +
                     "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 5);";
 
@@ -68,7 +70,7 @@ public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
     }
 
     @Override
-    public ArrayList<ShowDTO> buscarTodos()
+    public ArrayList<EventoDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -79,7 +81,7 @@ public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<ShowDTO> eventos = new ArrayList<>();
+        ArrayList<EventoDTO> eventos = new ArrayList<>();
         while (rs.next()) {
             int idEvento = rs.getInt("idEvento");
             ArrayList<String> lineUp = buscaLineUp(idEvento, c);
@@ -94,7 +96,7 @@ public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
                     rs.getString("uf"),
                     rs.getString("referencia"),
                     rs.getInt("lotacao"),
-                    LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                    LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     rs.getInt("vagasDisp"),
                     lineUp
@@ -134,7 +136,7 @@ public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> {
                 rs.getString("uf"),
                 rs.getString("referencia"),
                 rs.getInt("lotacao"),
-                LocalDateTime.parse(rs.getString("data").substring(0, 19),
+                LocalDateTime.parse(rs.getString("dataEvento").substring(0, 19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp"),
                 lineUp

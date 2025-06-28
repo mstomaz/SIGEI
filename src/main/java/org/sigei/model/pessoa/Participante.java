@@ -10,12 +10,8 @@ import java.util.ArrayList;
 
 public class Participante extends Pessoa {
     private final ArrayList<Ingresso> ingressos;
-    private LocalDate dataNasc;
+    private final LocalDate dataNasc;
 
-    public Participante() {
-        super();
-        ingressos = new ArrayList<>();
-    };
     public Participante(CPF cpf, String nome, String sobrenome, LocalDate dataNasc) {
         super(cpf, nome, sobrenome);
         this.dataNasc = dataNasc;

@@ -1,6 +1,7 @@
 package org.sigei.dao.evento;
 
 import org.sigei.dao.conexao.ConnectionFactory;
+import org.sigei.dto.evento.EventoDTO;
 import org.sigei.model.evento.Feira;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import org.sigei.dto.evento.FeiraDTO;
 
-public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
+public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> implements IGenericsEventoDAO {
     @Override
     public void inserir(Feira feira)
             throws SQLException, ClassNotFoundException {
@@ -20,7 +21,7 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
         String sql = "INSERT INTO evento\n" +
                 "(nome, descricao,\n" +
                 "rua, numero, bairro, cidade, uf, referencia, lotacao,\n" +
-                "data, vagasDisp, tipoEvento)\n" +
+                "dataEvento, vagasDisp, tipoEvento)\n" +
                 "VALUES\n" +
                 "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1);";
 
@@ -41,7 +42,7 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
     }
 
     @Override
-    public ArrayList<FeiraDTO> buscarTodos()
+    public ArrayList<EventoDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -49,10 +50,9 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
                 "WHERE tipoEvento = 1";
 
         PreparedStatement pst = c.prepareStatement(sql);
-
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<FeiraDTO> eventos = new ArrayList<>();
+        ArrayList<EventoDTO> eventos = new ArrayList<>();
         while (rs.next()){
             FeiraDTO evento = new FeiraDTO(
                     rs.getInt("idEvento"),
@@ -65,7 +65,7 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
                     rs.getString("uf"),
                     rs.getString("referencia"),
                     rs.getInt("lotacao"),
-                    LocalDateTime.parse(rs.getString("data").substring(0,19),
+                    LocalDateTime.parse(rs.getString("dataEvento").substring(0,19),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                     rs.getInt("vagasDisp")
             );
@@ -102,7 +102,7 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> {
                 rs.getString("uf"),
                 rs.getString("referencia"),
                 rs.getInt("lotacao"),
-                LocalDateTime.parse(rs.getString("data").substring(0,19),
+                LocalDateTime.parse(rs.getString("dataEvento").substring(0,19),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp")
         );

@@ -1,13 +1,13 @@
 package org.sigei.model;
 
 public class CPF {
-    private String digitos;
+    private final String digitos;
     
     public CPF(String digitos) {
         this.digitos = digitos.replaceAll("\\D", "");
     }
     
-    public String getCpf() {
+    public String getDigitos() {
         return digitos;
     }
 

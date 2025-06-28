@@ -4,11 +4,10 @@ import org.sigei.exception.ValidationException;
 import org.sigei.model.CPF;
 
 public abstract class Pessoa {
-    private CPF cpf;
+    private final CPF cpf;
     private String nome;
     private String sobrenome;
 
-    public Pessoa() {}
     public Pessoa(CPF cpf, String nome, String sobrenome) {
         this.cpf = cpf;
         this.nome = nome;
