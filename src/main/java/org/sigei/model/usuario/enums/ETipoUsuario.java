@@ -5,12 +5,20 @@ public enum ETipoUsuario {
     PARTICIPANTE(2),
     ORGANIZADOR(3);
 
-    private int idTipo;
+    private final int idTipo;
     ETipoUsuario(int idTipo) {
         this.idTipo = idTipo;
     }
 
     public int getIdTipo() {
         return idTipo;
+    }
+    public static ETipoUsuario parseId(int value) {
+        return switch (value) {
+            case 1 -> ETipoUsuario.ADMINISTRADOR;
+            case 2 -> ETipoUsuario.PARTICIPANTE;
+            case 3 -> ETipoUsuario.ORGANIZADOR;
+            default -> throw new IllegalArgumentException("Tipo de pessoa não encontrado");
+        };
     }
 }

@@ -68,25 +68,19 @@ CREATE TABLE IF NOT EXISTS Show_artistas (
     ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Administrador (
+CREATE TABLE IF NOT EXISTS Pessoa (
 	cpf varchar(11),
     nome varchar(40) NOT NULL,
     sobrenome varchar(60) NOT NULL,
-    CONSTRAINT PK_administrador primary key (cpf)
-);
-
-CREATE TABLE IF NOT EXISTS Organizador (
-	cpf varchar(11),
-    nome varchar(40) NOT NULL,
-    sobrenome varchar(60) NOT NULL,
-    CONSTRAINT PK_administrador primary key (cpf)
+    tipoPessoa int NOT NULL,
+    CONSTRAINT PK_pessoa primary key (cpf)
 );
 
 CREATE TABLE IF NOT EXISTS Organizador_eventos (
 	cpf varchar(11),
     idEvento int,
     CONSTRAINT PK_Organizador_eventos primary key (cpf, idEvento),
-    CONSTRAINT FK_cpf_org_eventos FOREIGN KEY (cpf) REFERENCES Organizador(cpf)
+    CONSTRAINT FK_cpf_org_eventos FOREIGN KEY (cpf) REFERENCES Pessoa(cpf)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     CONSTRAINT FK_idEvento_org_eventos FOREIGN KEY (idEvento) REFERENCES Evento(idEvento)
@@ -96,20 +90,32 @@ CREATE TABLE IF NOT EXISTS Organizador_eventos (
 
 CREATE TABLE IF NOT EXISTS Participante (
 	cpf varchar(11),
-    nome varchar(40) NOT NULL,
-    sobrenome varchar(60) NOT NULL,
     dataNasc date NOT NULL,
-    CONSTRAINT PK_administrador primary key (cpf)
+    CONSTRAINT PK_participante primary key (cpf),
+    CONSTRAINT FK_participante_cpf FOREIGN KEY (cpf) REFERENCES Pessoa(cpf)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Participante_ingressos (
 	cpf varchar(11),
     idIngresso int,
     CONSTRAINT PK_Participante_ingressos primary key (cpf, idIngresso),
-    CONSTRAINT FK_cpf_part_ingressos FOREIGN KEY (cpf) REFERENCES Participante(cpf)
+    CONSTRAINT FK_cpf_part_ingressos FOREIGN KEY (cpf) REFERENCES Pessoa(cpf)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
     CONSTRAINT FK_idEvento_part_ingressos FOREIGN KEY (idIngresso) REFERENCES Ingresso(idIngresso)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Usuario (
+	cpf varchar(11),
+    login varchar(100) UNIQUE NOT NULL,
+    senha varchar(200) NOT NULL,
+    tipoUsuario int NOT NULL,
+    CONSTRAINT PK_usuario_pessoa PRIMARY KEY (cpf, login),
+    CONSTRAINT FK_usuario_pessoa FOREIGN KEY (cpf) REFERENCES Pessoa(cpf)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

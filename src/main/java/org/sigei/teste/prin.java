@@ -8,6 +8,7 @@ import org.sigei.dao.pessoa.OrganizadorDAO;
 import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.evento.PalestraDTO;
 import org.sigei.dto.pessoa.OrganizadorDTO;
+import org.sigei.dto.pessoa.PessoaDTO;
 import org.sigei.exception.EventoNaoEncontradoException;
 
 public class prin {
@@ -34,8 +35,10 @@ public class prin {
 //            if (dto == null) {
 //                throw new EventoNaoEncontradoException();
 //            }
-            for (OrganizadorDTO ev : dao.buscarTodos()) {
-                System.out.println(ev.getEventos());
+            for (PessoaDTO ev : dao.buscarTodos()) {
+                if (ev instanceof OrganizadorDTO org) {
+                    System.out.println(org.getEventos());
+                }
             }
         } catch (EventoNaoEncontradoException e) {
             System.out.println(e.getMessage());

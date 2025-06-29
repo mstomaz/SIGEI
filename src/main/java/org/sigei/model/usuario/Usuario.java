@@ -1,9 +1,6 @@
 package org.sigei.model.usuario;
 
 import org.sigei.exception.TipoUsuarioNaoEncontradoException;
-import org.sigei.model.pessoa.Administrador;
-import org.sigei.model.pessoa.Organizador;
-import org.sigei.model.pessoa.Participante;
 import org.sigei.model.pessoa.Pessoa;
 import org.sigei.model.usuario.enums.ETipoUsuario;
 
@@ -31,19 +28,12 @@ public class Usuario {
     }
 
     private ETipoUsuario defineTipoUsuario() {
-        switch (dadosPessoais) {
-            case Administrador adm -> {
-                return ETipoUsuario.ADMINISTRADOR;
-            }
-            case Participante part -> {
-                return ETipoUsuario.PARTICIPANTE;
-            }
-            case Organizador org -> {
-                return ETipoUsuario.ORGANIZADOR;
-            }
-            default -> {
-                throw new TipoUsuarioNaoEncontradoException();
-            }
-        }
+        return switch (dadosPessoais.getClass().getSimpleName()) {
+            case "Administrador" -> ETipoUsuario.ADMINISTRADOR;
+            case "Participante" ->  ETipoUsuario.PARTICIPANTE;
+            case "Organizador" -> ETipoUsuario.ORGANIZADOR;
+            default ->   throw new TipoUsuarioNaoEncontradoException("Tipo de pessoa não encontrado.");
+        };
+
     }
 }

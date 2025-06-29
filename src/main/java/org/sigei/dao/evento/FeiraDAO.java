@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import org.sigei.dto.evento.FeiraDTO;
 
-public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> implements IGenericsEventoDAO {
+public class FeiraDAO extends BaseEventosDAO<Feira> implements IGenericsEventoDAO {
     @Override
     public void inserir(Feira feira)
             throws SQLException, ClassNotFoundException {
@@ -106,5 +106,6 @@ public class FeiraDAO extends BaseEventosDAO<Feira, FeiraDTO> implements IGeneri
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 rs.getInt("vagasDisp")
         );
+        }
     }
-}
+

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class OficinaDAO extends BaseEventosDAO<Oficina, OficinaDTO> implements IGenericsEventoDAO {
+public class OficinaDAO extends BaseEventosDAO<Oficina> implements IGenericsEventoDAO {
     @Override
     public void inserir(Oficina oficina)
             throws SQLException, ClassNotFoundException {

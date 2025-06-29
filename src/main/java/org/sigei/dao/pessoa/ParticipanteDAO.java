@@ -1,15 +1,10 @@
 package org.sigei.dao.pessoa;
 
-import org.sigei.dao.IEscritaDAO;
-import org.sigei.dao.ILeituraDAO;
 import org.sigei.dao.conexao.ConnectionFactory;
-import org.sigei.dao.evento.IGenericsEventoDAO;
-import org.sigei.dao.evento.factory.EventoDAOFactory;
 import org.sigei.dao.ingresso.IngressoDAO;
-import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.ingresso.IngressoDTO;
-import org.sigei.dto.pessoa.OrganizadorDTO;
 import org.sigei.dto.pessoa.ParticipanteDTO;
+import org.sigei.dto.pessoa.PessoaDTO;
 import org.sigei.model.CPF;
 import org.sigei.model.Ingresso;
 import org.sigei.model.pessoa.Participante;
@@ -21,22 +16,45 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ParticipanteDAO implements IEscritaDAO<Participante, String>, ILeituraDAO<ParticipanteDTO, String> {
+public class ParticipanteDAO extends BasePessoaDAO<Participante> implements IGenericsPessoaDAO {
     @Override
     public void inserir(Participante prtc)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "INSERT INTO participante\n" +
-                "(cpf, nome, sobrenome, dataNasc)\n" +
+        c.setAutoCommit(false);
+
+        try {
+            String sql = "INSERT INTO Pessoa\n" +
+                    "(cpf, nome, sobrenome, tipoPessoa)\n" +
+                    "VALUES\n" +
+                    "(?, ?, ?, 2);";
+
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setString(1, prtc.getCpf().getDigitos());
+            pst.setString(2, prtc.getNome());
+            pst.setString(3, prtc.getSobrenome());
+
+            pst.execute();
+
+            inserirParticipante(prtc, c);
+            c.commit();
+        } catch(SQLException e) {
+            c.rollback();
+            throw e;
+        }
+    }
+
+    private void inserirParticipante(Participante prtc, Connection c)
+            throws SQLException {
+        String sql = "INSERT INTO Participante\n" +
+                "(cpf, dataNasc)\n" +
                 "VALUES\n" +
-                "(?, ?, ?, ?);";
+                "(?, ?);";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, prtc.getCpf().getDigitos());
-        pst.setString(2, prtc.getNome());
-        pst.setString(3, prtc.getSobrenome());
-        pst.setObject(4, prtc.getDataNasc());
+        pst.setObject(2, prtc.getDataNasc());
 
         pst.execute();
     }
@@ -57,42 +75,7 @@ public class ParticipanteDAO implements IEscritaDAO<Participante, String>, ILeit
     }
 
     @Override
-    public void apagar(String cpf)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "DELETE FROM participante\n" +
-                "WHERE cpf = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, cpf);
-
-        pst.execute();
-    }
-
-    @Override
-    public void alterar(Participante prtc)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "UPDATE participante\n" +
-                "SET\n" +
-                "nome = ?,\n" +
-                "sobrenome = ?,\n" +
-                "dataNasc = ?\n" +
-                "WHERE cpf = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, prtc.getCpf().getDigitos());
-        pst.setString(2, prtc.getNome());
-        pst.setString(3, prtc.getSobrenome());
-        pst.setObject(4, prtc.getDataNasc());
-
-        pst.execute();
-    }
-
-    @Override
-    public ArrayList<ParticipanteDTO> buscarTodos()
+    public ArrayList<PessoaDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
@@ -102,16 +85,17 @@ public class ParticipanteDAO implements IEscritaDAO<Participante, String>, ILeit
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<ParticipanteDTO> participantes = new ArrayList<>();
+        ArrayList<PessoaDTO> participantes = new ArrayList<>();
         while (rs.next()) {
-            String cpf = rs.getString("cpf");
+            CPF cpf = new CPF(rs.getString("cpf"));
+            PessoaDTO pessoa = new PessoaDAO().buscarPelaChave(cpf);
             ParticipanteDTO prtc = new ParticipanteDTO(
-                    cpf,
-                    rs.getString("nome"),
-                    rs.getString("sobrenome"),
+                    cpf.getDigitos(),
+                    pessoa.getNome(),
+                    pessoa.getSobrenome(),
                     LocalDate.parse(rs.getString("dataNasc"),
                             DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    buscaIngressos(cpf, c)
+                    buscaIngressos(cpf.getDigitos(), c)
             );
             participantes.add(prtc);
         }
@@ -137,15 +121,15 @@ public class ParticipanteDAO implements IEscritaDAO<Participante, String>, ILeit
     }
 
     @Override
-    public ParticipanteDTO buscarPelaChave(String cpf)
+    public ParticipanteDTO buscarPelaChave(CPF cpf)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM organizador\n" +
+        String sql = "SELECT * FROM Participante\n" +
                 "WHERE cpf = ?";
 
         PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, cpf);
+        pst.setString(1, cpf.getDigitos());
 
         ResultSet rs = pst.executeQuery();
 
@@ -153,13 +137,14 @@ public class ParticipanteDAO implements IEscritaDAO<Participante, String>, ILeit
             return null;
         }
 
+        PessoaDTO pessoa = new PessoaDAO().buscarPelaChave(cpf);
         return new ParticipanteDTO(
-                rs.getString("cpf"),
-                rs.getString("nome"),
-                rs.getString("sobrenome"),
+                cpf.getDigitos(),
+                pessoa.getNome(),
+                pessoa.getSobrenome(),
                 LocalDate.parse(rs.getString("dataNasc"),
                         DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                buscaIngressos(cpf, c)
+                buscaIngressos(cpf.getDigitos(), c)
         );
     }
 }

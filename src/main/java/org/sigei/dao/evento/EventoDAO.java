@@ -80,4 +80,38 @@ public class EventoDAO implements ILeituraDAO<EventoDTO, Integer> {
                 rs.getInt("tipoEvento")
         );
     }
+//        public EventoDTO buscaProximoEvento()
+//                throws SQLException, ClassNotFoundException {
+//        Connection c = ConnectionFactory.getConnection();
+//
+//        String sql = """
+//            SELECT * FROM Evento
+//            WHERE dataEvento >= NOW()
+//            ORDER BY dataEvento ASC
+//            LIMIT 1
+//        """;
+//
+//        PreparedStatement pst = c.prepareStatement(sql);
+//        ResultSet rs = pst.executeQuery();
+//
+//        if (!rs.next()) {
+//            return null;
+//        }
+//
+//        EventoDTO evento = new EventoDTO(
+//                rs.getString("nome"),
+//                rs.getString("descricao"),
+//                rs.getString("rua"),
+//                rs.getString("numero"),
+//                rs.getString("bairro"),
+//                rs.getString("cidade"),
+//                rs.getString("uf"),
+//                rs.getString("referencia"),
+//                rs.getInt("lotacao"),
+//                LocalDateTime.parse(rs.getString("data").substring(0, 19),
+//                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+//                rs.getInt("vagasDisp"),
+//        );
+//        return evento;
+//    }
 }

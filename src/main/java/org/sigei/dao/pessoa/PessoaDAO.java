@@ -1,68 +1,46 @@
 package org.sigei.dao.pessoa;
 
+import org.sigei.dao.ILeituraDAO;
 import org.sigei.dao.conexao.ConnectionFactory;
-import org.sigei.dto.pessoa.AdministradorDTO;
 import org.sigei.dto.pessoa.PessoaDTO;
 import org.sigei.model.CPF;
-import org.sigei.model.pessoa.Administrador;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class AdministradorDAO extends BasePessoaDAO<Administrador> implements IGenericsPessoaDAO {
-
-    @Override
-    public void inserir(Administrador adm)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "INSERT INTO Pessoa\n" +
-                "(cpf, nome, sobrenome, tipoPessoa)\n" +
-                "VALUES\n" +
-                "(?, ?, ?, 1);";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, adm.getCpf().getDigitos());
-        pst.setString(2, adm.getNome());
-        pst.setString(3, adm.getSobrenome());
-
-        pst.execute();
-    }
-
+public class PessoaDAO implements ILeituraDAO<PessoaDTO, CPF> {
     @Override
     public ArrayList<PessoaDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql= "SELECT * FROM Pessoa\n" +
-                "WHERE tipoPessoa = 1;";
+        String sql= "SELECT * FROM Pessoa";
 
         PreparedStatement pst = c.prepareStatement(sql);
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<PessoaDTO> admins = new ArrayList<>();
+        ArrayList<PessoaDTO> pessoas = new ArrayList<>();
         while (rs.next()){
-            AdministradorDTO adm = new AdministradorDTO(
+            PessoaDTO p = new PessoaDTO(
                     rs.getString("cpf"),
                     rs.getString("nome"),
                     rs.getString("sobrenome")
             );
-            admins.add(adm);
+            pessoas.add(p);
         }
-        return admins;
+        return pessoas;
     }
 
     @Override
-    public AdministradorDTO buscarPelaChave(CPF cpf)
+    public PessoaDTO buscarPelaChave(CPF cpf)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
         String sql= "SELECT * FROM Pessoa\n" +
-                "WHERE cpf = ?\n" +
-                "AND tipoPessoa = 1;";
+                "WHERE cpf = ?";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, cpf.getDigitos());
@@ -73,7 +51,7 @@ public class AdministradorDAO extends BasePessoaDAO<Administrador> implements IG
             return null;
         }
 
-        return new AdministradorDTO(
+        return new PessoaDTO(
                 rs.getString("cpf"),
                 rs.getString("nome"),
                 rs.getString("sobrenome")

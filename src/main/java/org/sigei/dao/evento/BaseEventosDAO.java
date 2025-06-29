@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public abstract class BaseEventosDAO<C extends Evento, K extends EventoDTO> implements IEscritaDAO<C, Integer> {
+public abstract class BaseEventosDAO<C extends Evento> implements IEscritaDAO<C, Integer> {
     @Override
     public abstract void inserir(C obj) throws SQLException, ClassNotFoundException;
 

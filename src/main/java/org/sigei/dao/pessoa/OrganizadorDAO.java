@@ -7,22 +7,23 @@ import org.sigei.dao.evento.IGenericsEventoDAO;
 import org.sigei.dao.evento.factory.EventoDAOFactory;
 import org.sigei.dto.evento.EventoDTO;
 import org.sigei.dto.pessoa.OrganizadorDTO;
+import org.sigei.dto.pessoa.PessoaDTO;
 import org.sigei.model.CPF;
 import org.sigei.model.evento.Evento;
 import org.sigei.model.pessoa.Organizador;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class OrganizadorDAO implements IEscritaDAO<Organizador, String>, ILeituraDAO<OrganizadorDTO, String> {
+public class OrganizadorDAO extends BasePessoaDAO<Organizador> implements IGenericsPessoaDAO {
     @Override
     public void inserir(Organizador org)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "INSERT INTO organizador\n" +
-                "(cpf, nome, sobrenome)\n" +
+        String sql = "INSERT INTO Pessoa\n" +
+                "(cpf, nome, sobrenome, tipoUsuario)\n" +
                 "VALUES\n" +
-                "(?, ?, ?);";
+                "(?, ?, ?, 3);";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, org.getCpf().getDigitos());
@@ -47,50 +48,18 @@ public class OrganizadorDAO implements IEscritaDAO<Organizador, String>, ILeitur
     }
 
     @Override
-    public void apagar(String cpf)
+    public ArrayList<PessoaDTO> buscarTodos()
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "DELETE FROM organizador\n" +
-                "WHERE cpf = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, cpf);
-
-        pst.execute();
-    }
-
-    @Override
-    public void alterar(Organizador org)
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "UPDATE organizador\n" +
-                "SET\n" +
-                "nome = ?,\n" +
-                "sobrenome = ?,\n" +
-                "WHERE cpf = ?;";
-
-        PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, org.getNome());
-        pst.setString(2, org.getSobrenome());
-        pst.setString(3, org.getCpf().getDigitos());
-
-        pst.execute();
-    }
-
-    @Override
-    public ArrayList<OrganizadorDTO> buscarTodos()
-            throws SQLException, ClassNotFoundException {
-        Connection c = ConnectionFactory.getConnection();
-
-        String sql = "SELECT * FROM organizador;";
+        String sql = "SELECT * FROM Pessoa\n" +
+                "WHERE tipoPessoa = 3;";
 
         PreparedStatement pst = c.prepareStatement(sql);
 
         ResultSet rs = pst.executeQuery();
 
-        ArrayList<OrganizadorDTO> orgs = new ArrayList<>();
+        ArrayList<PessoaDTO> orgs = new ArrayList<>();
         while (rs.next()) {
             String cpf = rs.getString("cpf");
             OrganizadorDTO org = new OrganizadorDTO(
@@ -128,15 +97,16 @@ public class OrganizadorDAO implements IEscritaDAO<Organizador, String>, ILeitur
     }
 
     @Override
-    public OrganizadorDTO buscarPelaChave(String cpf)
+    public OrganizadorDTO buscarPelaChave(CPF cpf)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM organizador\n" +
-                "WHERE cpf = ?";
+        String sql = "SELECT * FROM Pessoa\n" +
+                "WHERE cpf = ?\n" +
+                "AND tipoUsuario = 3;";
 
         PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, cpf);
+        pst.setString(1, cpf.getDigitos());
 
         ResultSet rs = pst.executeQuery();
 
@@ -148,7 +118,7 @@ public class OrganizadorDAO implements IEscritaDAO<Organizador, String>, ILeitur
                 rs.getString("cpf"),
                 rs.getString("nome"),
                 rs.getString("sobrenome"),
-                buscarEventos(cpf, c)
+                buscarEventos(cpf.getDigitos(), c)
         );
     }
 }

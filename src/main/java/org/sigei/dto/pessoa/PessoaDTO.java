@@ -2,7 +2,7 @@ package org.sigei.dto.pessoa;
 
 import org.sigei.model.CPF;
 
-public abstract class PessoaDTO {
+public class PessoaDTO {
     private final CPF cpf;
     private final String nome;
     private final String sobrenome;

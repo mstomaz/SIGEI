@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class ShowDAO extends BaseEventosDAO<Show, ShowDTO> implements IGenericsEventoDAO {
+public class ShowDAO extends BaseEventosDAO<Show> implements IGenericsEventoDAO {
     @Override
     public void inserir(Show show)
             throws SQLException, ClassNotFoundException {
