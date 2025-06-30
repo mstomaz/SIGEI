@@ -111,10 +111,10 @@ CREATE TABLE IF NOT EXISTS Participante_ingressos (
 
 CREATE TABLE IF NOT EXISTS Usuario (
 	cpf varchar(11),
-    login varchar(100) UNIQUE NOT NULL,
+    login varchar(100) NOT NULL,
     senha varchar(200) NOT NULL,
     tipoUsuario int NOT NULL,
-    CONSTRAINT PK_usuario_pessoa PRIMARY KEY (cpf, login),
+    CONSTRAINT PK_usuario_pessoa PRIMARY KEY (login),
     CONSTRAINT FK_usuario_pessoa FOREIGN KEY (cpf) REFERENCES Pessoa(cpf)
     ON DELETE CASCADE
     ON UPDATE CASCADE

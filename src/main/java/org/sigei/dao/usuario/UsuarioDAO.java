@@ -30,33 +30,29 @@ public class UsuarioDAO {
         pst.execute();
     }
 
-    public void apagar(CPF cpf, String login)
+    public void apagar(String login)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
         String sql = "DELETE FROM Usuario\n" +
-                "WHERE cpf = ?\n" +
-                "AND login = ?;";
+                "WHERE login = ?;";
 
         PreparedStatement pst = c.prepareStatement(sql);
-        pst.setString(1, cpf.getDigitos());
-        pst.setString(2, login);
+        pst.setString(1, login);
 
         pst.execute();
     }
 
-    public void mudaSenha(CPF cpf, String login, String novaSenha)
+    public void mudaSenha(String login, String novaSenha)
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
         String sql = "UPDATE Usuario\n" +
                 "SET senha = md5(?)\n" +
-                "WHERE cpf = ?\n" +
-                "AND login = ?;";
+                "WHERE logij = ?;";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, novaSenha);
-        pst.setString(2, cpf.getDigitos());
         pst.setString(2, login);
 
         pst.execute();
@@ -85,17 +81,15 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-    public UsuarioDTO buscarPelaChave(CPF cpf, String login)
+    public UsuarioDTO buscarPelaChave(String login)
             throws SQLException, ClassNotFoundException {
             Connection c = ConnectionFactory.getConnection();
 
             String sql= "SELECT * FROM Usuario\n" +
-                    "WHERE cpf = ?\n" +
-                    "AND login = ?;";
+                    "WHERE login = ?;";
 
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setString(1, cpf.getDigitos());
-            pst.setString(2, login);
+            pst.setString(1, login);
 
             ResultSet rs = pst.executeQuery();
 
@@ -115,7 +109,7 @@ public class UsuarioDAO {
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM usuarios WHERE login = ? AND mdf5(senha) = ?";
+        String sql = "SELECT * FROM Usuario WHERE login = ? AND md5(senha) = ?";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, login);
