@@ -109,7 +109,7 @@ public class UsuarioDAO {
             throws SQLException, ClassNotFoundException {
         Connection c = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM Usuario WHERE login = ? AND md5(senha) = ?";
+        String sql = "SELECT * FROM Usuario WHERE login = ? AND senha = md5(?);";
 
         PreparedStatement pst = c.prepareStatement(sql);
         pst.setString(1, login);

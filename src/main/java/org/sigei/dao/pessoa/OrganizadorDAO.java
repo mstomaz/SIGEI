@@ -21,7 +21,7 @@ public class OrganizadorDAO extends BasePessoaDAO<Organizador> implements IGener
         Connection c = ConnectionFactory.getConnection();
 
         String sql = "INSERT INTO Pessoa\n" +
-                "(cpf, nome, sobrenome, tipoUsuario)\n" +
+                "(cpf, nome, sobrenome, tipoPessoa)\n" +
                 "VALUES\n" +
                 "(?, ?, ?, 3);";
 

@@ -15,6 +15,10 @@ public abstract class PessoaValidator {
             result.addErro("Sobrenome", "campo.obrigatorio");
         }
 
+        if (cpf.getDigitos().length() != 11) {
+            result.addErro("Cpf", "cpf.invalido");
+        }
+
         return result;
     }
 }

@@ -4,9 +4,18 @@
  */
 package org.sigei.views;
 
+import org.sigei.controller.CadastroController;
+import org.sigei.exception.ValidationException;
+import org.sigei.model.CPF;
+import org.sigei.model.pessoa.Organizador;
+import org.sigei.model.pessoa.Participante;
+import org.sigei.model.pessoa.Pessoa;
 import org.sigei.model.usuario.enums.ETipoUsuario;
-
+import org.sigei.validacao.MessageProvider;
 import javax.swing.*;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Map;
 
 /**
  *
@@ -15,12 +24,21 @@ import javax.swing.*;
 public class CadastroUsuarioForm extends javax.swing.JFrame {
     private static CadastroUsuarioForm instancia;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CadastroUsuarioForm.class.getName());
+    private final Map<String, String> campos;
 
     /**
      * Creates new form CadastroUsuarioForm
      */
     private CadastroUsuarioForm() {
         initComponents();
+        campos = Map.of(
+                "Nome", lblNome.getText().replace(":", ""),
+                "Sobrenome", lblSobrenome.getText().replace(":", ""),
+                "Cpf", lblCpf.getText().replace(":", ""),
+                "DataNasc", lblPnDataNasc.getText().replace(":", ""),
+                "Login", lblLogin.getText().replace(":", ""),
+                "Senha", lblSenha.getText().replace(":", "")
+        );
         cmbBoxTipoUsuario.addActionListener(e -> atualizarCampos());
         atualizarCampos();
 
@@ -72,13 +90,13 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         txtSenha = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         pnlDataNasc = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        lblPnDataNasc = new javax.swing.JLabel();
         lblDiaNasc = new javax.swing.JLabel();
-        txtDiaNasc = new javax.swing.JTextField();
-        txtMesNasc = new javax.swing.JTextField();
         lblMesNasc = new javax.swing.JLabel();
-        txtAnoNasc = new javax.swing.JTextField();
         lblAnoNasc = new javax.swing.JLabel();
+        txtDiaNasc = new javax.swing.JFormattedTextField();
+        txtMesNasc = new javax.swing.JFormattedTextField();
+        txtAnoNasc = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -99,16 +117,23 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         lblCpf.setText("CPF:");
         lblCpf.setToolTipText("");
 
+        txtNome.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         lblSobrenome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblSobrenome.setForeground(new java.awt.Color(240, 240, 240));
         lblSobrenome.setLabelFor(txtSobrenome);
         lblSobrenome.setText("Sobrenome:");
+
+        txtSobrenome.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        cmbBoxTipoUsuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         lblTipoUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblTipoUsuario.setForeground(new java.awt.Color(240, 240, 240));
         lblTipoUsuario.setLabelFor(cmbBoxTipoUsuario);
         lblTipoUsuario.setText("Tipo de usuário:");
 
+        mskTxtCpf.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         try {
             mskTxtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
         } catch (java.text.ParseException ex) {
@@ -130,80 +155,107 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         lblSenha.setLabelFor(txtSenha);
         lblSenha.setText("Senha:");
 
+        txtLogin.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        txtSenha.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
         jButton1.setBackground(new java.awt.Color(194, 24, 91));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(240, 240, 240));
         jButton1.setText("CADASTRAR");
+        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         pnlDataNasc.setBackground(new java.awt.Color(28, 28, 28));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel2.setText("Data de Nascimento");
+        lblPnDataNasc.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        lblPnDataNasc.setForeground(new java.awt.Color(240, 240, 240));
+        lblPnDataNasc.setText("Data de Nascimento");
 
         lblDiaNasc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblDiaNasc.setForeground(new java.awt.Color(240, 240, 240));
         lblDiaNasc.setLabelFor(lblDiaNasc);
         lblDiaNasc.setText("Dia");
 
-        txtDiaNasc.setColumns(2);
-
-        txtMesNasc.setColumns(2);
-
         lblMesNasc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMesNasc.setForeground(new java.awt.Color(240, 240, 240));
         lblMesNasc.setLabelFor(txtMesNasc);
         lblMesNasc.setText("Mês");
-
-        txtAnoNasc.setColumns(4);
 
         lblAnoNasc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblAnoNasc.setForeground(new java.awt.Color(240, 240, 240));
         lblAnoNasc.setLabelFor(txtAnoNasc);
         lblAnoNasc.setText("Ano");
 
+        txtDiaNasc.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        try {
+            txtDiaNasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        txtMesNasc.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        try {
+            txtMesNasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtMesNasc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMesNascActionPerformed(evt);
+            }
+        });
+
+        txtAnoNasc.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        try {
+            txtAnoNasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
         javax.swing.GroupLayout pnlDataNascLayout = new javax.swing.GroupLayout(pnlDataNasc);
         pnlDataNasc.setLayout(pnlDataNascLayout);
         pnlDataNascLayout.setHorizontalGroup(
             pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataNascLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblDiaNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDiaNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addGap(142, 142, 142)
                 .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtMesNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblMesNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(104, 104, 104)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                 .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtAnoNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAnoNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblAnoNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDataNascLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(131, 131, 131))
+                .addGap(50, 50, 50))
+            .addGroup(pnlDataNascLayout.createSequentialGroup()
+                .addGap(130, 130, 130)
+                .addComponent(lblPnDataNasc)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDataNascLayout.setVerticalGroup(
             pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataNascLayout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMesNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDiaNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
-            .addGroup(pnlDataNascLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblPnDataNasc)
+                .addGap(16, 16, 16)
                 .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblAnoNasc)
+                    .addComponent(lblDiaNasc)
                     .addComponent(lblMesNasc)
-                    .addComponent(lblDiaNasc))
+                    .addComponent(lblAnoNasc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtAnoNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addGroup(pnlDataNascLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDiaNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMesNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAnoNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -233,22 +285,23 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                     .addComponent(pnlDataNasc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(168, 168, 168))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblCredenciais, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(178, 178, 178))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblSenha))
                         .addGap(31, 31, 31))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(204, 204, 204))
+                        .addComponent(lblCredenciais, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(201, 201, 201))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(lblCadastro)
-                        .addGap(154, 154, 154))))
+                        .addGap(156, 156, 156))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,6 +355,41 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            cadastrarUsuario();
+            JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso!",
+                    "Erro", JOptionPane.INFORMATION_MESSAGE);
+        } catch (ValidationException e) {
+            e.getMessages().forEach((chave, valor) -> {
+                JOptionPane.showMessageDialog(this, MessageProvider.get(valor, campos.get(chave)),
+                        "Erro", JOptionPane.ERROR_MESSAGE);
+            });} catch (SQLException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtMesNascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMesNascActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMesNascActionPerformed
+
+    private void cadastrarUsuario() throws ValidationException, SQLException, ClassNotFoundException {
+        ETipoUsuario tipoUsuario = (ETipoUsuario) cmbBoxTipoUsuario.getSelectedItem();
+        Pessoa p;
+            if (tipoUsuario == ETipoUsuario.PARTICIPANTE) {
+                int diaNasc = Integer.parseInt(txtDiaNasc.getText());
+                int mesNasc = Integer.parseInt(txtMesNasc.getText());
+                int anoNasc = Integer.parseInt(txtAnoNasc.getText());
+                p = new Participante(new CPF(mskTxtCpf.getText()),
+                        txtNome.getText(), txtSobrenome.getText(),
+                        LocalDate.of(anoNasc, mesNasc, diaNasc));
+            } else {
+                p = new Organizador(new CPF(mskTxtCpf.getText()),
+                        txtNome.getText(), txtSobrenome.getText());
+            }
+
+            new CadastroController().cadastrar(p, txtLogin.getText(), new String(txtSenha.getPassword()));
+    }
     /**
      * @param args the command line arguments
      */
@@ -330,7 +418,6 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<ETipoUsuario> cmbBoxTipoUsuario;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAnoNasc;
     private javax.swing.JLabel lblCadastro;
@@ -340,15 +427,16 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblMesNasc;
     private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblPnDataNasc;
     private javax.swing.JLabel lblSenha;
     private javax.swing.JLabel lblSobrenome;
     private javax.swing.JLabel lblTipoUsuario;
     private javax.swing.JFormattedTextField mskTxtCpf;
     private javax.swing.JPanel pnlDataNasc;
-    private javax.swing.JTextField txtAnoNasc;
-    private javax.swing.JTextField txtDiaNasc;
+    private javax.swing.JFormattedTextField txtAnoNasc;
+    private javax.swing.JFormattedTextField txtDiaNasc;
     private javax.swing.JTextField txtLogin;
-    private javax.swing.JTextField txtMesNasc;
+    private javax.swing.JFormattedTextField txtMesNasc;
     private javax.swing.JTextField txtNome;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtSobrenome;

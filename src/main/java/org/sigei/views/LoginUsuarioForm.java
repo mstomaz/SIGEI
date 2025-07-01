@@ -18,7 +18,6 @@ import java.util.Objects;
  */
 public class LoginUsuarioForm extends javax.swing.JFrame {
     private static LoginUsuarioForm instancia;
-    private UsuarioDTO usuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginUsuarioForm.class.getName());
 
     /**
@@ -26,7 +25,6 @@ public class LoginUsuarioForm extends javax.swing.JFrame {
      */
     private LoginUsuarioForm() {
         initComponents();
-        usuario = null;
         lblIcon.setIcon(new javax.swing.ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/user_166246.png")))
                 .getImage().getScaledInstance(200, 180, Image.SCALE_SMOOTH)));
         jLabel2.setIcon(new javax.swing.ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/user_166277.png")))
@@ -193,7 +191,7 @@ public class LoginUsuarioForm extends javax.swing.JFrame {
 
     private void validarUsuario() {
         try {
-            usuario = new LoginController().Login(txtLogin.getText(), new String(txtPwd.getPassword()));
+            UsuarioDTO u = new LoginController().Login(txtLogin.getText(), new String(txtPwd.getPassword()));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }

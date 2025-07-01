@@ -142,8 +142,7 @@ public class ParticipanteDAO extends BasePessoaDAO<Participante> implements IGen
                 cpf.getDigitos(),
                 pessoa.getNome(),
                 pessoa.getSobrenome(),
-                LocalDate.parse(rs.getString("dataNasc"),
-                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                rs.getDate("dataNasc").toLocalDate(),
                 buscaIngressos(cpf.getDigitos(), c)
         );
     }
